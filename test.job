@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH --job-name=pix2pix_test
+#SBATCH --time=24:00:00
+#SBATCH --gres=gpu:1
+
+python test.py \
+    --gpu_ids 0 \
+    --dataroot ./data_paired/pelvis_sample \
+    --name 2D_no-pp_20epochs_bs1_in1_out1_#2 \
+    --model pix2pix \
+    --dataset_mode nifti \
+    --direction BtoA \
+    --input_nc 1 \
+    --output_nc 1 \
+    --preprocess none
+    
