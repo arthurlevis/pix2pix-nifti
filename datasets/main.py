@@ -1,5 +1,4 @@
-import os
-from unzip_patient_nii import unzip_gz
+from unzip_nii import unzip_gz
 from prepare_paired_nii import prep_pairs
 import argparse
 import glob

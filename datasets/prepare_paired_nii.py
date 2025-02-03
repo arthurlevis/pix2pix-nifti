@@ -1,7 +1,6 @@
 import os
 import shutil
 import random
-import glob
 
 def prep_pairs(patient_folders, output_dir, split_ratio):
     """

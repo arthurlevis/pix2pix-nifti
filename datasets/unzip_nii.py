@@ -1,7 +1,6 @@
 import os
 import gzip
 import shutil
-import glob
 
 def unzip_gz(directory):
     """
