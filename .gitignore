@@ -2,12 +2,16 @@
 debug*
 checkpoints/
 results/
+logs/
 build/
 dist/
 *.png
 *.zip
 *.gz
 *.nii
+*.o
+*.e
+
 torch.egg-info/
 */**/__pycache__
 torch/version.py
