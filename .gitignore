@@ -1,15 +1,11 @@
 .DS_Store
 debug*
 checkpoints/
-results/
 build/
 dist/
-*.png
 *.zip
 *.gz
 *.nii
-*.o
-*.e
 
 torch.egg-info/
 */**/__pycache__
