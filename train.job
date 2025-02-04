@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N pix2pix-train-brain
+#$ -N pix2pix-train-pelvis
 #$ -l h_rt=24:00:00
 #$ -l gpu=1
 #$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/train
@@ -9,7 +9,7 @@ cd /home/zcemjml/Scratch/pix2pix-nifti
 
 python train.py \
     --gpu_ids 0 \
-    --dataroot ./Task1-paired/brain \  # path to train (A, B) & val (A, B)
+    --dataroot ./Task1-paired/pelvis \  # path to train (A, B) & val (A, B)
     --name 2D-brain-no-preprocess \
     --model pix2pix \
     --dataset_mode nifti \
