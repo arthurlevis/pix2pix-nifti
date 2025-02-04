@@ -3,6 +3,9 @@
 #SBATCH --time=24:00:00
 #SBATCH --gres=gpu:1
 
+source /home/zcemjml/anaconda3/etc/profile.d/conda.sh
+conda activate pytorch-pix2pix-nifti 
+
 python test.py \
     --gpu_ids 0 \
     --dataroot ./data_paired/pelvis_sample \
