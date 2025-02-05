@@ -38,14 +38,39 @@ class NiftiDataset(BaseDataset):
         A_img = nib.load(A_path).get_fdata()
         B_img = nib.load(B_path).get_fdata()
 
-        # Extract a middle slice (assuming axial slices)
-        slice_idx = A_img.shape[2] // 2
-        A_slice = A_img[:, :, slice_idx]
-        B_slice = B_img[:, :, slice_idx]
+        # ---------- 2D data------------------------------
 
-        # Convert slices to tensors and add batch and channel dimensions
-        A = torch.from_numpy(A_slice).unsqueeze(0).unsqueeze(0).float()  # Shape: [1, 1, H, W]
-        B = torch.from_numpy(B_slice).unsqueeze(0).unsqueeze(0).float()  # Shape: [1, 1, H, W]
+        # # Extract a middle slice (assuming axial slices)
+        # slice_idx = A_img.shape[2] // 2
+        # A_slice = A_img[:, :, slice_idx]
+        # B_slice = B_img[:, :, slice_idx]
+
+        # # Convert slices to tensors and add batch and channel dimensions
+        # A = torch.from_numpy(A_slice).unsqueeze(0).unsqueeze(0).float()  # Shape: [1, 1, H, W]
+        # B = torch.from_numpy(B_slice).unsqueeze(0).unsqueeze(0).float()  # Shape: [1, 1, H, W]
+
+        # ---------- 2.5D data (5 slices)-------------------
+
+        # Extract 5 slices (2.5D data)
+        slice_idx = A_img.shape[2] // 2  # Middle slice index
+        slice_indices = [slice_idx - 2, slice_idx - 1, slice_idx, slice_idx + 1, slice_idx + 2]
+
+        # Handle edge cases (if volume has fewer than 5 slices)
+        slice_indices = [max(0, min(idx, A_img.shape[2] - 1)) for idx in slice_indices]
+
+        # Extract slices for MRI and CT
+        A_slices = [A_img[:, :, idx] for idx in slice_indices]
+        B_slices = [B_img[:, :, idx] for idx in slice_indices]
+
+        # Stack slices along the channel dimension
+        A_stack = np.stack(A_slices, axis=0)  # Shape: [5, H, W]
+        B_stack = np.stack(B_slices, axis=0)  # Shape: [5, H, W]
+
+        # Convert to tensors and add batch dimension
+        A = torch.from_numpy(A_stack).unsqueeze(0).float()  # Shape: [1, 5, H, W]
+        B = torch.from_numpy(B_stack).unsqueeze(0).float()  # Shape: [1, 5, H, W]
+
+        # --------------------------------------------------
 
         # Resize to 256x256 using bilinear interpolation
         A = torch.nn.functional.interpolate(A, size=(256, 256), mode='bilinear', align_corners=False)
@@ -63,3 +88,4 @@ class NiftiDataset(BaseDataset):
     def __len__(self):
         """Return the total number of images in the dataset."""
         return len(self.A_paths)
+    

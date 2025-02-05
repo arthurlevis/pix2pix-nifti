@@ -3,9 +3,10 @@ debug*
 checkpoints/
 build/
 dist/
-*.zip
-*.gz
-*.nii
+/**/*.zip
+/**/*.gz
+/**/*.nii
+/**/*.sh
 
 torch.egg-info/
 */**/__pycache__

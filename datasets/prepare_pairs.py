@@ -38,13 +38,13 @@ def prep_pairs(patient_folders, output_dir, split_ratio):
     def copy_files(patients, split):
         for patient in patients:
             patient_id = os.path.basename(patient)
-            mri_file = os.path.join(patient, 'mr.nii')  # MRI file (A)
-            ct_file = os.path.join(patient, 'ct.nii')   # CT file (B)
+            mri_file = os.path.join(patient, 'mr.nii.gz')  # MRI file (A)
+            ct_file = os.path.join(patient, 'ct.nii.gz')   # CT file (B)
 
             if os.path.exists(mri_file) and os.path.exists(ct_file):
                 # Copy MRI (A) & CT (B) files
-                shutil.copy(mri_file, os.path.join(output_dir, split, 'A', f'{patient_id}.nii'))
-                shutil.copy(ct_file, os.path.join(output_dir, split, 'B', f'{patient_id}.nii'))
+                shutil.copy(mri_file, os.path.join(output_dir, split, 'A', f'{patient_id}.nii.gz'))
+                shutil.copy(ct_file, os.path.join(output_dir, split, 'B', f'{patient_id}.nii.gz'))
 
     # Copy files for each split
     copy_files(train_patients, 'train')

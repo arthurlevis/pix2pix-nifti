@@ -1,4 +1,5 @@
 import numpy as np
+import nibabel as nib
 import os
 import sys
 import ntpath
@@ -50,6 +51,38 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256, use_w
     webpage.add_images(ims, txts, links, width=width)
     if use_wandb:
         wandb.log(ims_dict)
+
+# Added to save output as nifti
+def save_nifti(visuals, image_path, save_dir='./results', prefix='', suffix=''):
+    """
+    Save generated images as NIfTI files.
+
+    Args:
+        visuals (OrderedDict): Dictionary of visuals to save.
+        image_path (str): Path to the input image (used to derive the output filename).
+        save_dir (str): Directory to save the NIfTI files.
+        prefix (str): Prefix for the saved filename.
+        suffix (str): Suffix for the saved filename.
+    """
+    # Create the save directory if it doesn't exist
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Iterate through the visuals (e.g., real_A, fake_B, real_B)
+    for label, image_tensor in visuals.items():
+        # Convert tensor to numpy array and squeeze out batch and channel dimensions
+        image_np = image_tensor.cpu().float().numpy()  # Shape: [1, 5, H, W]
+        image_np = np.squeeze(image_np)  # Shape: [5, H, W]
+
+        # Create a NIfTI image object
+        nifti_img = nib.Nifti1Image(image_np, affine=np.eye(4))  # Use identity affine matrix
+
+        # Derive the output filename
+        image_name = os.path.basename(image_path[0]).replace('.nii', '')  # Remove .nii extension
+        save_path = os.path.join(save_dir, f'{prefix}{label}_{image_name}{suffix}.nii.gz')
+
+        # Save the NIfTI file
+        nib.save(nifti_img, save_path)
+        print(f'Saved NIfTI file: {save_path}')
 
 
 class Visualizer():

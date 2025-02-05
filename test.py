@@ -30,7 +30,8 @@ import os
 from options.test_options import TestOptions
 from data import create_dataset
 from models import create_model
-from util.visualizer import save_images
+# from util.visualizer import save_images
+from util.visualizer import save_nifti
 from util import html
 
 try:
@@ -74,7 +75,12 @@ if __name__ == '__main__':
         model.test()           # run inference
         visuals = model.get_current_visuals()  # get image results
         img_path = model.get_image_paths()     # get image paths
-        if i % 5 == 0:  # save images to an HTML file
-            print('processing (%04d)-th image... %s' % (i, img_path))
-        save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize, use_wandb=opt.use_wandb)
-    webpage.save()  # save the HTML
+
+        # Replace save_images by save_nifti
+        save_nifti(visuals, img_path, save_dir=os.path.join(opt.results_dir, opt.name, 'test_latest'))
+
+    #     if i % 5 == 0:  # save images to an HTML file
+    #         print('processing (%04d)-th image... %s' % (i, img_path))
+    #     save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize, use_wandb=opt.use_wandb)
+    # webpage.save()  # save the HTML
+    
