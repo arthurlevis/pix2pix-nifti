@@ -4,88 +4,80 @@ import nibabel as nib
 import numpy as np
 import torch
 from data.base_dataset import BaseDataset
-from data.image_folder import make_dataset
-import torchvision.transforms as transforms
+from data.preprocess_nifti import load_and_preprocess_nifti
 
 class NiftiDataset(BaseDataset):
-
     def __init__(self, opt):
-        """Initialize the dataset.
-
-        Args:
-            opt (Option class): Stores all the experiment flags; needs to be a subclass of BaseOptions.
-        """
         BaseDataset.__init__(self, opt)
-        self.dir_A = os.path.join(opt.dataroot, opt.phase, 'A')  # 'phase' can be 'train', 'test', etc.
-        self.dir_B = os.path.join(opt.dataroot, opt.phase, 'B')  # 'phase' can be 'train', 'test', etc.
+        self.dir_A = os.path.join(opt.dataroot, opt.phase, 'A')
+        self.dir_B = os.path.join(opt.dataroot, opt.phase, 'B')
+        self.A_paths = sorted(glob.glob(os.path.join(self.dir_A, '*.nii.gz*')))
+        self.B_paths = sorted(glob.glob(os.path.join(self.dir_B, '*.nii.gz*')))
+
+        assert len(self.A_paths) == len(self.B_paths)
+    
+        # Sliding window parameters
+        self.window_size = 5
+        self.stride = 4  # Overlap of 1
         
-        self.A_paths = sorted(glob.glob(os.path.join(self.dir_A, '*.nii*')))
-        self.B_paths = sorted(glob.glob(os.path.join(self.dir_B, '*.nii*')))
+        # Create expanded dataset indices
+        self.expanded_indices = self._create_sliding_indices()
 
-        # Ensure that the number of A and B images match
-        assert len(self.A_paths) == len(self.B_paths), "The number of images in A and B directories must be the same."
-
-        # Define transformations if needed (e.g., normalization, resizing)
-        self.transform = transforms.Compose([
-            transforms.ToTensor(),  # Convert numpy array to tensor
-        ])
+    def _create_sliding_indices(self):
+        expanded_indices = []
+        for vol_idx in range(len(self.A_paths)):
+            # Load volume to get number of slices
+            vol = nib.load(self.A_paths[vol_idx]).get_fdata()
+            n_slices = vol.shape[2]
+            
+            # Calculate valid starting indices for sliding windows
+            # Ensure we don't exceed volume bounds
+            n_windows = (n_slices - self.window_size) // self.stride + 1
+            start_indices = [i * self.stride for i in range(n_windows)]
+            
+            # Store (volume_index, start_slice) pairs
+            for start_idx in start_indices:
+                expanded_indices.append((vol_idx, start_idx))
+        
+        return expanded_indices
 
     def __getitem__(self, index):
-        A_path = self.A_paths[index]
-        B_path = self.B_paths[index]
+        # Get volume and starting slice indices
+        vol_idx, start_slice = self.expanded_indices[index]
         
-        # Load NIfTI files
-        A_img = nib.load(A_path).get_fdata()
-        B_img = nib.load(B_path).get_fdata()
+        A_path = self.A_paths[vol_idx]
+        B_path = self.B_paths[vol_idx]
 
-        # ---------- 2D data------------------------------
+        # Load and preprocess volumes
+        A_img = load_and_preprocess_nifti(A_path, 'MR')
+        B_img = load_and_preprocess_nifti(B_path, 'CT')
 
-        # # Extract a middle slice (assuming axial slices)
-        # slice_idx = A_img.shape[2] // 2
-        # A_slice = A_img[:, :, slice_idx]
-        # B_slice = B_img[:, :, slice_idx]
-
-        # # Convert slices to tensors and add batch and channel dimensions
-        # A = torch.from_numpy(A_slice).unsqueeze(0).unsqueeze(0).float()  # Shape: [1, 1, H, W]
-        # B = torch.from_numpy(B_slice).unsqueeze(0).unsqueeze(0).float()  # Shape: [1, 1, H, W]
-
-        # ---------- 2.5D data (5 slices)-------------------
-
-        # Extract 5 slices (2.5D data)
-        slice_idx = A_img.shape[2] // 2  # Middle slice index
-        slice_indices = [slice_idx - 2, slice_idx - 1, slice_idx, slice_idx + 1, slice_idx + 2]
-
-        # Handle edge cases (if volume has fewer than 5 slices)
-        slice_indices = [max(0, min(idx, A_img.shape[2] - 1)) for idx in slice_indices]
-
-        # Extract slices for MRI and CT
+        # Extract window of slices
+        slice_indices = [min(i, A_img.shape[2]-1) for i in range(start_slice, start_slice + self.window_size)]
         A_slices = [A_img[:, :, idx] for idx in slice_indices]
         B_slices = [B_img[:, :, idx] for idx in slice_indices]
 
-        # Stack slices along the channel dimension
-        A_stack = np.stack(A_slices, axis=0)  # Shape: [5, H, W]
-        B_stack = np.stack(B_slices, axis=0)  # Shape: [5, H, W]
+        # Stack slices
+        A_stack = np.stack(A_slices, axis=0)
+        B_stack = np.stack(B_slices, axis=0)
 
-        # Convert to tensors and add batch dimension
-        A = torch.from_numpy(A_stack).unsqueeze(0).float()  # Shape: [1, 5, H, W]
-        B = torch.from_numpy(B_stack).unsqueeze(0).float()  # Shape: [1, 5, H, W]
+        # Convert to tensors
+        A = torch.from_numpy(A_stack).float()
+        B = torch.from_numpy(B_stack).float()
 
-        # --------------------------------------------------
+        # Resize to 256x256
+        A = torch.nn.functional.interpolate(A.unsqueeze(0), size=(256, 256), 
+                                          mode='bilinear', align_corners=False)
+        B = torch.nn.functional.interpolate(B.unsqueeze(0), size=(256, 256), 
+                                          mode='bilinear', align_corners=False)
 
-        # Resize to 256x256 using bilinear interpolation
-        A = torch.nn.functional.interpolate(A, size=(256, 256), mode='bilinear', align_corners=False)
-        B = torch.nn.functional.interpolate(B, size=(256, 256), mode='bilinear', align_corners=False)
-
-        # Normalize to [0, 1]
-        A = (A - A.min()) / (A.max() - A.min())
-        B = (B - B.min()) / (B.max() - B.min())
-
-        # # Debugging: Print tensor shapes
-        # print(f"A shape: {A.shape}, B shape: {B.shape}")
-
-        return {'A': A.squeeze(0), 'B': B.squeeze(0), 'A_paths': A_path, 'B_paths': B_path}
+        return {
+            'A': A.squeeze(0),
+            'B': B.squeeze(0),
+            'A_paths': A_path,
+            'B_paths': B_path,
+            'slice_start': start_slice
+        }
 
     def __len__(self):
-        """Return the total number of images in the dataset."""
-        return len(self.A_paths)
-    
+        return len(self.expanded_indices)
