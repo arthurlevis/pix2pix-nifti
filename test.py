@@ -22,8 +22,8 @@ if __name__ == '__main__':
         model.eval()
 
     for i, data in enumerate(dataset):
-        if i >= opt.num_test:
-            break
+        # if i >= opt.num_test:  # number of slices = higher than default value for --num_test (50)
+        #     break
         
         model.set_input(data)
         model.test()
@@ -38,8 +38,8 @@ if __name__ == '__main__':
         })
 
         if i % 5 == 0:
-            print(f'processing ({i:04d})-th image... {img_path}')
-
+            print(f'Processing {i:05d}-th sliding window... patient {os.path.basename(img_path[0])}...')
+    
     save_dir = os.path.join(opt.results_dir, opt.name, 'test_latest')
     util_nifti.process_and_save_predictions(
         predictions,
