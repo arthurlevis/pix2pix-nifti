@@ -23,19 +23,16 @@ class NiftiDataset(BaseDataset):
         # Create expanded dataset indices
         self.expanded_indices = self._create_sliding_indices()
 
+
     def _create_sliding_indices(self):
         expanded_indices = []
-        for vol_idx in range(len(self.A_paths)):
-            # Load volume to get number of slices
-            vol = nib.load(self.A_paths[vol_idx]).get_fdata()
+        for vol_idx, path in enumerate(self.A_paths):  
+            vol = nib.load(path).get_fdata()
             n_slices = vol.shape[2]
             
-            # Calculate valid starting indices for sliding windows
-            # Ensure we don't exceed volume bounds
             n_windows = (n_slices - self.window_size) // self.stride + 1
             start_indices = [i * self.stride for i in range(n_windows)]
             
-            # Store (volume_index, start_slice) pairs
             for start_idx in start_indices:
                 expanded_indices.append((vol_idx, start_idx))
         

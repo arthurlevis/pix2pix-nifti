@@ -55,22 +55,27 @@ def save_reconstructed_nifti(reconstructed_volume, reference_path, output_path, 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     nib.save(new_img, output_path)
 
-def process_and_save_predictions(model_output, original_path, save_dir):
+
+def process_and_save_predictions(model_output, patient_original_path, save_dir):
     os.makedirs(save_dir, exist_ok=True)
-    orig_img = nib.load(original_path)
-    metadata = {
-        'shape': orig_img.shape,
-        'affine': orig_img.affine,
-        'header': orig_img.header
-    }
     
     predictions_by_volume = defaultdict(dict)
     for pred_data in model_output:
-        vol_id = os.path.basename(pred_data['path'])
+        patient_id = os.path.basename(pred_data['path']).split('real_B_')[1].split('.nii.gz')[0]
         slice_start = pred_data['slice_start']
-        predictions_by_volume[vol_id][slice_start] = pred_data['visuals']['fake_B']
+        predictions_by_volume[patient_id][slice_start] = pred_data['visuals']['fake_B']
     
-    for vol_id, predictions in predictions_by_volume.items():
+    for patient_id, predictions in predictions_by_volume.items():
+        # Get the original file path for this patient
+        example_pred = next(p for p in model_output if 
+                           os.path.basename(p['path']).split('real_B_')[1].split('.nii.gz')[0] == patient_id)
+        patient_original_path = example_pred['path']
+        orig_img = nib.load(patient_original_path)
+        metadata = {
+            'shape': orig_img.shape,
+            'affine': orig_img.affine,
+            'header': orig_img.header
+        }
         reconstructed = reconstruct_volume(predictions, metadata)
-        output_path = os.path.join(save_dir, f"fake_B_{vol_id}")
-        save_reconstructed_nifti(reconstructed, original_path, output_path, denormalize=True)
+        output_path = os.path.join(save_dir, f"pred_{patient_id}.nii.gz")
+        save_reconstructed_nifti(reconstructed, patient_original_path, output_path, denormalize=True)
