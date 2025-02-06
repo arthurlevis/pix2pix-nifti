@@ -4,6 +4,7 @@ from prepare_pairs import prep_pairs
 import argparse
 import glob
 import os
+import shutil
 
 def main():
     parser = argparse.ArgumentParser()
@@ -20,7 +21,7 @@ def main():
         with zipfile.ZipFile(args.zip_file, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
         
-        # Considers flat or nested structure
+        # Considers nested (Task1.zip) or flat (brain or plevis.zip) structure
         anatomy_path = os.path.join(temp_dir, zip_base)
         if args.anatomy:
             anatomy_path = os.path.join(anatomy_path, args.anatomy)
@@ -32,6 +33,17 @@ def main():
             args.paired_dir,
             tuple(args.split_ratio)
         )
+
+        # Create masks directory for test patients
+        test_dir = os.path.join(args.paired_dir, 'test', 'A')
+        test_patients = [f.split('real_A_')[1].split('.nii.gz')[0] for f in os.listdir(test_dir)]
+        mask_dir = os.path.join(args.paired_dir, 'test_masks')
+        os.makedirs(mask_dir, exist_ok=True)
+
+        for patient in test_patients:
+            mask_file = os.path.join(anatomy_path, patient, 'mask.nii.gz')
+            if os.path.exists(mask_file):
+                shutil.copy(mask_file, os.path.join(mask_dir, f'mask_{patient}.nii.gz'))
 
 if __name__ == '__main__':
     main()
