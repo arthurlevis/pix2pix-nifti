@@ -42,13 +42,42 @@ def resize_2d(image, target_size):
                    target_size[1] / image.shape[1])
     return zoom(image, zoom_factors, order=1)
 
-def save_reconstructed_nifti(reconstructed_volume, reference_path, output_path):
+def denormalize_volume(volume):
+    """Denormalize CT volume directly from [-1, 1] to HU range."""
+
+    # print(f"Before denorm - min: {volume.min()}, max: {volume.max()}")
+    volume = (volume +1) * 1600
+    volume = volume -1000  
+    # print(f"After denorm - min: {volume.min()}, max: {volume.max()}")
+
+    return volume
+
+# def copy_original_nifti(src_path, dst_path):
+#     """Copy original NIfTI file without modification."""
+#     img = nib.load(src_path)
+#     nib.save(img, dst_path)
+
+def save_reconstructed_nifti(reconstructed_volume, reference_path, output_path, denormalize=True):
     ref_img = nib.load(reference_path)
+    
+    if denormalize:
+        reconstructed_volume = denormalize_volume(reconstructed_volume)
+    
+    # Cast to int16 for CT values
+    reconstructed_volume = reconstructed_volume.astype(np.int16)
+    
     new_img = nib.Nifti1Image(reconstructed_volume, ref_img.affine, ref_img.header)
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     nib.save(new_img, output_path)
 
 def process_and_save_predictions(model_output, original_path, save_dir):
+    # Create save directory
+    os.makedirs(save_dir, exist_ok=True)
+    
+    # # Get paths for real images
+    # dataroot = os.path.dirname(os.path.dirname(os.path.dirname(original_path)))
+    # phase = os.path.basename(os.path.dirname(os.path.dirname(original_path)))
+    
     orig_img = nib.load(original_path)
     metadata = {
         'shape': orig_img.shape,
@@ -56,15 +85,22 @@ def process_and_save_predictions(model_output, original_path, save_dir):
         'header': orig_img.header
     }
     
-    predictions_by_volume = defaultdict(lambda: defaultdict(dict))
+    predictions_by_volume = defaultdict(dict)
     for pred_data in model_output:
         vol_id = os.path.basename(pred_data['path'])
         slice_start = pred_data['slice_start']
-        for key in ['real_A', 'real_B', 'fake_B']:
-            predictions_by_volume[vol_id][key][slice_start] = pred_data['visuals'][key]
+        predictions_by_volume[vol_id][slice_start] = pred_data['visuals']['fake_B']
+        
+    #     # Get paths for real images
+    #     real_a_path = os.path.join(dataroot, phase, 'A', vol_id)
+    #     real_b_path = os.path.join(dataroot, phase, 'B', vol_id)
+        
+    #     # Save real images by copying original files
+    #     copy_original_nifti(real_a_path, os.path.join(save_dir, f"real_A_{vol_id}"))
+    #     copy_original_nifti(real_b_path, os.path.join(save_dir, f"real_B_{vol_id}"))
     
-    for vol_id, data in predictions_by_volume.items():
-        for key in ['real_A', 'real_B', 'fake_B']:
-            reconstructed = reconstruct_volume(data[key], metadata)
-            output_path = os.path.join(save_dir, f"{key}_{vol_id}")
-            save_reconstructed_nifti(reconstructed, original_path, output_path)
+    # Process and save fake images
+    for vol_id, predictions in predictions_by_volume.items():
+        reconstructed = reconstruct_volume(predictions, metadata)
+        output_path = os.path.join(save_dir, f"fake_B_{vol_id}")
+        save_reconstructed_nifti(reconstructed, original_path, output_path, denormalize=True)
