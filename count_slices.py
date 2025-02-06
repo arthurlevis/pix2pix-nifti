@@ -9,12 +9,12 @@ def count_slices(nii_path):
       'axial': shape[2]
    }
 
-# input
-nii_input = './results/brain-sample-test/test_latest/real_A_1BA054.nii.gz'
-slices_input = count_slices(nii_input)
-print(f"Number of sagittal slices: {slices_input['sagittal']}")
-print(f"Number of coronal slices: {slices_input['coronal']}")
-print(f"Number of axial slices: {slices_input['axial']}")
+# # input
+# nii_input = './results/brain-sample-test/test_latest/real_A_1BA054.nii.gz'
+# slices_input = count_slices(nii_input)
+# print(f"Number of sagittal slices: {slices_input['sagittal']}")
+# print(f"Number of coronal slices: {slices_input['coronal']}")
+# print(f"Number of axial slices: {slices_input['axial']}")
 
 # output 
 nii_output = './results/brain-sample-test/test_latest/fake_B_1BA054.nii.gz'
