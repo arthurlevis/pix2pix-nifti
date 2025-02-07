@@ -18,7 +18,7 @@ class NiftiDataset(BaseDataset):
     
         # Sliding window parameters
         self.window_size = 5
-        self.stride = 4  # Overlap of 1
+        self.stride = 3  # Overlap of 2
         
         # Create expanded dataset indices
         self.expanded_indices = self._create_sliding_indices()

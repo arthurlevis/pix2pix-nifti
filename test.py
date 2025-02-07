@@ -37,8 +37,8 @@ if __name__ == '__main__':
             'slice_start': data['slice_start'].item()
         })
 
-        if i % 5 == 0:
-            print(f'Processing {i:05d}-th sliding window... / {os.path.basename(img_path[0])}...')
+        # if i % 5 == 0:
+        #     print(f'Processing {i:05d}-th sliding window... / {os.path.basename(img_path[0])}...')
     
     save_dir = os.path.join(opt.results_dir, opt.name, 'test_latest')
     util_nifti.process_and_save_predictions(

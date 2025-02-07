@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N pix2pix-train-brain
+#$ -N p2p-train-B-default
 #$ -l h_rt=12:00:00
 #$ -l gpu=1
 #$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/train
