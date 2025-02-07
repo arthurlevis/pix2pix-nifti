@@ -59,7 +59,7 @@ def calculate_average_metrics():
 
     real_ct_dir = "../brain-sample-paired/test/B"
     mask_dir = "../brain-sample-paired/test_masks"
-    fake_ct_dir = "../results/brain-sample-v1/test_latest"  # verify latest experiment name
+    fake_ct_dir = "../results/brain-sample-batch/test_latest"  # verify latest experiment name
     
     metrics = {'MAE': [], 'PSNR': [], 'SSIM': []}
     processed = []

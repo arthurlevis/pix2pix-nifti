@@ -7,7 +7,7 @@ if __name__ == '__main__':
     opt = TrainOptions().parse()
     dataset = create_dataset(opt)
     dataset_size = len(dataset)
-    print('The number of training images = %d' % dataset_size)
+    # print('Number of slicing windows = %d' % dataset_size)
 
     model = create_model(opt)
     model.setup(opt)

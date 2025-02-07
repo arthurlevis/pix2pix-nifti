@@ -1,19 +1,25 @@
 #!/bin/bash
-#SBATCH --job-name=pix2pix_test
-#SBATCH --time=24:00:00
-#SBATCH --gres=gpu:1
+#$ -N pix2pix-train-brain
+#$ -l h_rt=12:00:00
+#$ -l gpu=1
+#$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/train
+#$ -e /home/zcemjml/Scratch/pix2pix-nifti/logs/train
 
 source /home/zcemjml/anaconda3/etc/profile.d/conda.sh
 conda activate pytorch-pix2pix-nifti 
 
+cd /home/zcemjml/Scratch/pix2pix-nifti 
+
 python test.py \
     --gpu_ids 0 \
-    --dataroot ./data_paired/pelvis_sample \
-    --name 2D_no-pp_20epochs_bs1_in1_out1_#2 \
+    --dataroot ./brain-paired \
+    --name brain-default \
     --model pix2pix \
     --dataset_mode nifti \
     --direction BtoA \
-    --input_nc 1 \
-    --output_nc 1 \
-    --preprocess none
+    --input_nc 5 \
+    --output_nc 5 \
+    --batch_size 16 \
+    --preprocess none \
+    --no_flip 
     

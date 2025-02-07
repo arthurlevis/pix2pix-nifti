@@ -22,7 +22,7 @@ if __name__ == '__main__':
         model.eval()
 
     for i, data in enumerate(dataset):
-        # if i >= opt.num_test:  # number of slices = higher than default value for --num_test (50)
+        # if i >= opt.num_test:  # number of slices = higher than default value of --num_test (50)
         #     break
         
         model.set_input(data)
