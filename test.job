@@ -2,8 +2,8 @@
 #$ -N pix2pix-train-brain
 #$ -l h_rt=12:00:00
 #$ -l gpu=1
-#$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/train
-#$ -e /home/zcemjml/Scratch/pix2pix-nifti/logs/train
+#$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/test
+#$ -e /home/zcemjml/Scratch/pix2pix-nifti/logs/test
 
 source /home/zcemjml/anaconda3/etc/profile.d/conda.sh
 conda activate pytorch-pix2pix-nifti 
@@ -22,4 +22,3 @@ python test.py \
     --batch_size 16 \
     --preprocess none \
     --no_flip 
-    
