@@ -77,5 +77,5 @@ def process_and_save_predictions(model_output, patient_original_path, save_dir):
             'header': orig_img.header
         }
         reconstructed = reconstruct_volume(predictions, metadata)
-        output_path = os.path.join(save_dir, f"pred_{patient_id}.nii.gz")
+        output_path = os.path.join(save_dir, f"fake_B_{patient_id}.nii.gz")
         save_reconstructed_nifti(reconstructed, patient_original_path, output_path, denormalize=True)
