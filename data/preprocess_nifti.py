@@ -2,7 +2,7 @@ import numpy as np
 import SimpleITK as sitk
 import os
 
-def resample_image(image, target_spacing=[1.0, 1.0, 1.0], interpolator=sitk.sitkLinear):
+def resample_image(image, target_spacing=[1.0, 1.0, 2.5], interpolator=sitk.sitkLinear):  # 1.0, 1.0, 2.5 for brain / 1.0, 1.0, 2.5 for pelvis
     """Resample image to target spacing using SimpleITK."""
 
     original_spacing = image.GetSpacing()
