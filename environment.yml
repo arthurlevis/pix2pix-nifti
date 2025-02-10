@@ -1,18 +1,19 @@
 name: pytorch-pix2pix-nifti
 channels:
-- pytorch
-- defaults
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
 dependencies:
-- python=3.8
-- pytorch=1.8.1
-- scipy
-- pip
-- pip:
-  - dominate==2.6.0
-  - torchvision==0.9.1
-  - Pillow==8.0.1
-  - numpy==1.19.2
-  - visdom==0.1.8
-  - wandb==0.12.18
-  - nibabel==3.2.0
-
+  - python=3.8
+  - pytorch>=2.0
+  - torchvision
+  - cudatoolkit=11.8
+  - pip
+  - pip:
+    - dominate
+    - Pillow
+    - numpy
+    - visdom
+    - nibabel
+    - simpleitk
