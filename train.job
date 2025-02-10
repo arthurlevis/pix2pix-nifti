@@ -21,7 +21,6 @@ python train.py \
     --output_nc 5 \
     --batch_size 16 \
     --preprocess none \
-    --no_flip \
     --netD n_layers \
     --netG unet_256
     
