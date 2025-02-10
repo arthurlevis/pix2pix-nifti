@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N p2p-train-B-nD-uG
+#$ -N p2p-train-B-da
 #$ -l h_rt=12:00:00
 #$ -l gpu=1
 #$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/train
@@ -13,7 +13,7 @@ cd /home/zcemjml/Scratch/pix2pix-nifti
 python train.py \
     --gpu_ids 0 \
     --dataroot ./brain-paired \
-    --name brain-nD-unetG \
+    --name brain-data-augment \
     --model pix2pix \
     --dataset_mode nifti \
     --direction BtoA \
