@@ -4,6 +4,8 @@ import numpy as np
 from typing import Optional
 from skimage.metrics import peak_signal_noise_ratio, structural_similarity
 from skimage.util.arraycrop import crop
+import os
+import glob
 
 
 class ImageMetrics():
@@ -185,8 +187,59 @@ class ImageMetrics():
             return ssim_value_full
 
 if __name__=='__main__':
+
+    # # Single nii.gz file
+    # metrics = ImageMetrics()
+    # ground_truth_path = "../brain-sample-paired/test/B/real_B_1BA005.nii.gz"
+    # predicted_path = "../results/brain-sample/test_latest/fake_B_1BA005.nii.gz"
+    # mask_path = "../brain-sample-paired/test_masks/mask_1BA005.nii.gz"
+    # print(metrics.score_patient(ground_truth_path, predicted_path, mask_path))
+
+    # Iterate over all nii.gz files
     metrics = ImageMetrics()
-    ground_truth_path = "../brain-sample-paired/test/B/real_B_1BA005.nii.gz"
-    predicted_path = "../results/brain-sample/test_latest/fake_B_1BA005.nii.gz"
-    mask_path = "../brain-sample-paired/test_masks/mask_1BA005.nii.gz"
-    print(metrics.score_patient(ground_truth_path, predicted_path, mask_path))
+    gt_dir = "../brain-sample-paired/test/B"
+    pred_dir = "../results/brain-sample/test_latest"
+    mask_dir = "../brain-sample-paired/test_masks"
+    
+    # Get all patient IDs from ground truth files
+    all_gt = glob.glob(os.path.join(gt_dir, "real_B_1[BP][ABC]*.nii.gz"))
+    patient_ids = [os.path.basename(f).split("real_B_")[1].split(".nii.gz")[0] for f in all_gt]
+
+    results = []
+    for pid in patient_ids:
+        gt_path = os.path.join(gt_dir, f"real_B_{pid}.nii.gz")
+        pred_path = os.path.join(pred_dir, f"fake_B_{pid}.nii.gz")
+        mask_path = os.path.join(mask_dir, f"mask_{pid}.nii.gz")
+        
+        if all(os.path.exists(f) for f in [gt_path, pred_path, mask_path]):
+            results.append(metrics.score_patient(gt_path, pred_path, mask_path))
+
+    # Calculate mean metrics
+    mean_metrics = {
+        'mae': np.mean([x['mae'] for x in results]),
+        'ssim': np.mean([x['ssim'] for x in results]),
+        'psnr': np.mean([x['psnr'] for x in results])
+    }
+    print("\nMean metrics across all patients:")
+    print(mean_metrics)
+
+    # Calculate median metrics
+    median_metrics = {
+        'mae': np.median([x['mae'] for x in results]),
+        'ssim': np.median([x['ssim'] for x in results]),
+        'psnr': np.median([x['psnr'] for x in results])
+    }
+    print("\nMedian metrics across all patients:")
+    print(median_metrics)
+
+    # Calculate max metrics
+    max_mae = np.max([x['mae'] for x in results])
+    max_mae_idx = np.argmax([x['mae'] for x in results])  # Get index of max MAE
+    max_mae_pid = patient_ids[max_mae_idx]  # Get corresponding patient ID
+    print(f"\nMaximum MAE ({max_mae:.4f}) occurred for patient: {max_mae_pid}")
+
+    # Calculate max metrics
+    min_mae = np.min([x['mae'] for x in results])
+    min_mae_idx = np.argmin([x['mae'] for x in results])  # Get index of max MAE
+    min_mae_pid = patient_ids[min_mae_idx]  # Get corresponding patient ID
+    print(f"\nMinimum MAE ({min_mae:.4f}) occurred for patient: {min_mae_pid}")
