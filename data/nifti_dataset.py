@@ -4,7 +4,7 @@ import nibabel as nib
 import numpy as np
 import torch
 from data.base_dataset import BaseDataset
-from data.preprocess_nifti import load_and_preprocess_nifti
+from data.preprocess_nifti import load_and_preprocess
 
 class NiftiDataset(BaseDataset):
     def __init__(self, opt):
@@ -46,8 +46,8 @@ class NiftiDataset(BaseDataset):
         B_path = self.B_paths[vol_idx]
 
         # Load and preprocess volumes
-        A_img = load_and_preprocess_nifti(A_path, 'MR')
-        B_img = load_and_preprocess_nifti(B_path, 'CT')
+        A_img = load_and_preprocess(A_path, 'MR')
+        B_img = load_and_preprocess(B_path, 'CT')
 
         # Extract window of slices
         slice_indices = [min(i, A_img.shape[2]-1) for i in range(start_slice, start_slice + self.window_size)]
