@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N p2p-train-B-da
+#$ -N p2p-train-B
 #$ -l h_rt=12:00:00
 #$ -l gpu=1
 #$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/train
@@ -25,4 +25,5 @@ python train.py \
     --preprocess none \
     --n_epochs 1 \
     --n_epochs_decay 1 \
-    --save_epoch_freq 1 
+    --save_epoch_freq 1 \
+    --no_flip
