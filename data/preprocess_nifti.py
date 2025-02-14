@@ -30,6 +30,9 @@ def load_and_preprocess(file_path, modality):
     # Convert to numpy array
     data = sitk.GetArrayFromImage(nii).astype(np.float32)
 
+    # SimpleITK uses (z,y,x), while Nibabel uses (x,y,z)
+    data = np.transpose(data, (2, 1, 0)) 
+
     # Preprocess intensities
     data = preprocess_volume(data, modality)
 
