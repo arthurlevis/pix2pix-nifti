@@ -9,7 +9,7 @@ def count_slices(nii_path):
       'axial': shape[2]
    }
 
-nii = '../brain-sample-paired/test/B/real_B_1BA005.nii.gz'
+nii = '../brain-sample-paired/test/B/real_B_1BA001.nii.gz'
 
 slices = count_slices(nii)
 print(f"Number of sagittal slices: {slices['sagittal']}")
