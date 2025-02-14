@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N p2p-test-B-default
+#$ -N p2p-test-B
 #$ -l h_rt=12:00:00
 #$ -l gpu=1
 #$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/test
@@ -13,12 +13,14 @@ cd /home/zcemjml/Scratch/pix2pix-nifti
 python test.py \
     --gpu_ids 0 \
     --dataroot ./brain-paired \
-    --name brain-default \
+    --name brain \
     --model pix2pix \
-    --dataset_mode nifti \
-    --direction BtoA \
     --input_nc 5 \
     --output_nc 5 \
+    --netD n_layers \
+    --netG unet_256 \
+    --dataset_mode nifti \
+    --direction BtoA \
     --batch_size 16 \
     --preprocess none \
-    --no_flip 
+    --no_flip
