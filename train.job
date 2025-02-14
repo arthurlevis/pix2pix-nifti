@@ -25,5 +25,4 @@ python train.py \
     --preprocess none \
     --n_epochs 1 \
     --n_epochs_decay 1 \
-    --save_epoch_freq 1 \
-    --no_flip
+    --save_epoch_freq 1 
