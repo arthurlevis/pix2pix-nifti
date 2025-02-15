@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N p2p-test-P
+#$ -N p2p-test-P-da
 #$ -l h_rt=12:00:00
 #$ -l gpu=1
 #$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/test
@@ -13,7 +13,7 @@ cd /home/zcemjml/Scratch/pix2pix-nifti
 python test.py \
     --gpu_ids 0 \
     --dataroot ./pelvis-paired \
-    --name pelvis \
+    --name pelvis-da \
     --model pix2pix \
     --input_nc 5 \
     --output_nc 5 \
