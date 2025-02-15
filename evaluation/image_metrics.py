@@ -236,7 +236,7 @@ if __name__=='__main__':
     max_ssim = np.max([x['ssim'] for x in results])
     max_ssim_idx = np.argmax([x['ssim'] for x in results])  # index of max SSIM
     max_ssim_pid = patient_ids[max_ssim_idx]  # corresponding patient ID
-    print(f"\nMinimum SSIM ({max_ssim:.4f}) occurred for patient: {max_ssim_pid}")
+    print(f"\nMax SSIM ({max_ssim:.4f}) occurred for patient: {max_ssim_pid}")
 
     # # Min SSIM
     # min_ssim = np.min([x['ssim'] for x in results])
