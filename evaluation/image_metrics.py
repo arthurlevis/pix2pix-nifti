@@ -197,9 +197,9 @@ if __name__=='__main__':
 
     # Iterate over all nii.gz files
     metrics = ImageMetrics()
-    gt_dir = "../brain-sample-paired/test/B"
-    mask_dir = "../brain-sample-paired/test_masks"
-    pred_dir = "../results/brain-da/test_latest"
+    gt_dir = "../brain-paired/test/B"
+    mask_dir = "../brain-paired/test_masks"
+    pred_dir = "../results/brain/test_latest"
     
     # Get all patient IDs from ground truth files
     all_gt = glob.glob(os.path.join(gt_dir, "real_B_1[BP][ABC]*.nii.gz"))
