@@ -199,7 +199,7 @@ if __name__=='__main__':
     metrics = ImageMetrics()
     gt_dir = "../brain-paired/test/B"
     mask_dir = "../brain-paired/test_masks"
-    pred_dir = "../results/brain/test_latest"
+    pred_dir = "../results/brain-da/test_latest"
     
     # Get all patient IDs from ground truth files
     all_gt = glob.glob(os.path.join(gt_dir, "real_B_1[BP][ABC]*.nii.gz"))
@@ -217,29 +217,29 @@ if __name__=='__main__':
     # Calculate mean metrics
     mean_metrics = {
         'mae': np.mean([x['mae'] for x in results]),
-        'ssim': np.mean([x['ssim'] for x in results]),
-        'psnr': np.mean([x['psnr'] for x in results])
+        'psnr': np.mean([x['psnr'] for x in results]),
+        'ssim': np.mean([x['ssim'] for x in results])
     }
     print("\nMean metrics across all patients:")
     print(mean_metrics)
 
-    # Calculate median metrics
-    median_metrics = {
-        'mae': np.median([x['mae'] for x in results]),
-        'ssim': np.median([x['ssim'] for x in results]),
-        'psnr': np.median([x['psnr'] for x in results])
-    }
-    print("\nMedian metrics across all patients:")
-    print(median_metrics)
+    # # Calculate median metrics
+    # median_metrics = {
+    #     'mae': np.median([x['mae'] for x in results]),
+    #     'ssim': np.median([x['ssim'] for x in results]),
+    #     'psnr': np.median([x['psnr'] for x in results])
+    # }
+    # print("\nMedian metrics across all patients:")
+    # print(median_metrics)
 
-    # Calculate max metrics
+    # Max MAE
     max_mae = np.max([x['mae'] for x in results])
-    max_mae_idx = np.argmax([x['mae'] for x in results])  # Get index of max MAE
-    max_mae_pid = patient_ids[max_mae_idx]  # Get corresponding patient ID
+    max_mae_idx = np.argmax([x['mae'] for x in results])  # index of max MAE
+    max_mae_pid = patient_ids[max_mae_idx]  # corresponding patient ID
     print(f"\nMaximum MAE ({max_mae:.4f}) occurred for patient: {max_mae_pid}")
 
-    # Calculate max metrics
+    # Min MAE
     min_mae = np.min([x['mae'] for x in results])
-    min_mae_idx = np.argmin([x['mae'] for x in results])  # Get index of max MAE
-    min_mae_pid = patient_ids[min_mae_idx]  # Get corresponding patient ID
+    min_mae_idx = np.argmin([x['mae'] for x in results])  # index of max MAE
+    min_mae_pid = patient_ids[min_mae_idx]  # corresponding patient ID
     print(f"\nMinimum MAE ({min_mae:.4f}) occurred for patient: {min_mae_pid}")
