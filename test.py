@@ -2,6 +2,7 @@ from options.test_options import TestOptions
 from data import create_dataset
 from models import create_model
 from util import util_nifti
+import time
 import os
 
 if __name__ == '__main__':
@@ -15,6 +16,7 @@ if __name__ == '__main__':
     dataset = create_dataset(opt)
     model = create_model(opt)
     model.setup(opt)
+    start_time = time.time()
 
     predictions = []
     
@@ -39,6 +41,8 @@ if __name__ == '__main__':
 
         # if i % 5 == 0:
         #     print(f'Processing {i:05d}-th sliding window... / {os.path.basename(img_path[0])}...')
+    
+    print(f'Total inference time: {time.time() - start_time:.2f} seconds')
     
     save_dir = os.path.join(opt.results_dir, opt.name, 'test_latest')
     util_nifti.process_and_save_predictions(
