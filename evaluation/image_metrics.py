@@ -232,14 +232,14 @@ if __name__=='__main__':
     # print("\nMedian metrics across all patients:")
     # print(median_metrics)
 
-    # Max MAE
-    max_mae = np.max([x['mae'] for x in results])
-    max_mae_idx = np.argmax([x['mae'] for x in results])  # index of max MAE
-    max_mae_pid = patient_ids[max_mae_idx]  # corresponding patient ID
-    print(f"\nMaximum MAE ({max_mae:.4f}) occurred for patient: {max_mae_pid}")
+    # Max SSIM
+    max_ssim = np.max([x['ssim'] for x in results])
+    max_ssim_idx = np.argmax([x['ssim'] for x in results])  # index of max SSIM
+    max_ssim_pid = patient_ids[max_ssim_idx]  # corresponding patient ID
+    print(f"\nMinimum MAE ({max_ssim:.4f}) occurred for patient: {max_ssim_pid}")
 
-    # Min MAE
-    min_mae = np.min([x['mae'] for x in results])
-    min_mae_idx = np.argmin([x['mae'] for x in results])  # index of max MAE
-    min_mae_pid = patient_ids[min_mae_idx]  # corresponding patient ID
-    print(f"\nMinimum MAE ({min_mae:.4f}) occurred for patient: {min_mae_pid}")
+    # # Min SSIM
+    # min_ssim = np.min([x['ssim'] for x in results])
+    # min_ssim_idx = np.argmin([x['ssim'] for x in results])  # index of min SSIM
+    # min_ssim_pid = patient_ids[min_ssim_idx]  # corresponding patient ID
+    # print(f"\nMinimum MAE ({min_ssim:.4f}) occurred for patient: {min_ssim_pid}")
