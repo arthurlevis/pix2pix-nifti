@@ -2,8 +2,8 @@
 #$ -N test-name
 #$ -l h_rt=12:00:00
 #$ -l gpu=1
-#$ -o /pth_to_/logs/test
-#$ -e /pth_to_/logs/test
+#$ -o /path_to_/logs/test
+#$ -e /path_to_/logs/test
 
 source path_to_/profile.d/conda.sh
 conda activate pytorch-pix2pix-nifti 

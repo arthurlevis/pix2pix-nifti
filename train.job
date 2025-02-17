@@ -2,8 +2,8 @@
 #$ -N train-name
 #$ -l h_rt=12:00:00
 #$ -l gpu=1
-#$ -o /pth_to_/logs/test
-#$ -e /pth_to_/logs/test
+#$ -o /path_to_/logs/train
+#$ -e /path_to_/logs/train
 
 source path_to_/profile.d/conda.sh
 conda activate pytorch-pix2pix-nifti 
