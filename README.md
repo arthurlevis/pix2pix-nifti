@@ -16,7 +16,7 @@ cd pytorch-pix2pix-nifti
 
 - Install conda environment:
 ```bash
-`conda env create -f environment.yml`
+conda env create -f environment.yml
 ```
 
 - Follow steps in `/datasets` to prepare dataset for pix2pix-nifti.
