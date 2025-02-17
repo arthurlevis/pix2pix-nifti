@@ -18,4 +18,5 @@ cd pytorch-pix2pix-nifti
 ```
 
 - Prepare dataset for pix2pix - pairs of images {A,B}:
+
 Follow steps in `/datasets`
