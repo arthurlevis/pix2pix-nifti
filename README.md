@@ -17,6 +17,22 @@ cd pytorch-pix2pix-nifti
 `conda env create -f environment.yml`
 ```
 
-- Prepare dataset for pix2pix - pairs of images {A,B}:
+- Follow steps in `/datasets` to prepare dataset for pix2pix.
 
-Follow steps in `/datasets`
+- Train
+```bash
+# on CPU (check available options)
+python train.py --dataroot ./path_to_paired_dataset --name train-name --model pix2pix
+
+# on GPU
+qsub train.job
+```
+
+- Test
+```bash
+# on CPU (check available options)
+python test.py --dataroot ./path_to_paired_dataset --name test-name --model pix2pix
+
+# on GPU
+qsub test.job
+```
