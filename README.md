@@ -17,7 +17,7 @@ cd pytorch-pix2pix-nifti
 `conda env create -f environment.yml`
 ```
 
-- Follow steps in `/datasets` to prepare dataset for pix2pix.
+- Follow steps in `/datasets` to prepare dataset for pix2pix-nifti.
 
 - Train
 ```bash
