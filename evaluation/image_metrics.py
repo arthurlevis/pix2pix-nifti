@@ -1,3 +1,7 @@
+"""
+This file is adapted from SynthRAD2023: https://github.com/SynthRAD2023
+"""
+
 import SimpleITK
 from evalutils.io import SimpleITKLoader
 import numpy as np
@@ -188,18 +192,11 @@ class ImageMetrics():
 
 if __name__=='__main__':
 
-    # # Single nii.gz file
-    # metrics = ImageMetrics()
-    # ground_truth_path = "../brain-sample-paired/test/B/real_B_1BA005.nii.gz"
-    # predicted_path = "../results/brain-sample/test_latest/fake_B_1BA005.nii.gz"
-    # mask_path = "../brain-sample-paired/test_masks/mask_1BA005.nii.gz"
-    # print(metrics.score_patient(ground_truth_path, predicted_path, mask_path))
-
     # Iterate over all nii.gz files
     metrics = ImageMetrics()
-    gt_dir = "../pelvis-paired/test/B"
-    mask_dir = "../pelvis-paired/test_masks"
-    pred_dir = "../results/pelvis-da/test_latest"
+    gt_dir = "../path_to_/test/B"
+    mask_dir = "../path_to_/test/test_masks"
+    pred_dir = "../results/experiment_name/test_latest"
     
     # Get all patient IDs from ground truth files
     all_gt = glob.glob(os.path.join(gt_dir, "real_B_1[BP][ABC]*.nii.gz"))

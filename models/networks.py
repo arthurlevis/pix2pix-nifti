@@ -1,3 +1,7 @@
+"""
+This file is borrowed from pix2pix: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
+"""
+
 import torch
 import torch.nn as nn
 from torch.nn import init

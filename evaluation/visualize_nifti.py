@@ -1,10 +1,14 @@
+"""
+Arthur Levisalles
+"""
+
 import nibabel as nib
 import matplotlib.pyplot as plt
 
 # Load nifti file
-# img = nib.load("../1BB152/real_A_1BB152.nii.gz")  # MRI
-# img = nib.load("../1BB152/real_B_1BB152.nii.gz")  # real CT
-img = nib.load("../1BB152/fake_B_1BB152.nii.gz")  # sCT
+# img = nib.load("../path_to_MRI")  # MRI
+# img = nib.load("../path_to_realCT")  # real CT
+img = nib.load("../path_to_sCT")  # sCT
 data = img.get_fdata().astype(float)
 
 # Slice number

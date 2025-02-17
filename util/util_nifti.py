@@ -1,3 +1,7 @@
+"""
+Arthur Levisalles
+"""
+
 import numpy as np
 import nibabel as nib
 import os

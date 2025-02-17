@@ -1,3 +1,7 @@
+"""
+This file is borrowed from pix2pix: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
+"""
+
 """This module contains simple helper functions """
 from __future__ import print_function
 import torch

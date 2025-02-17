@@ -1,3 +1,7 @@
+"""
+Arthur Levisalles
+"""
+
 import nibabel as nib
 
 def count_slices(nii_path):
@@ -9,10 +13,11 @@ def count_slices(nii_path):
       'axial': shape[2]
    }
 
-# nii = '../brain-sample-paired/test/B/real_B_1BA001.nii.gz'
-nii = '../results/brain-sample/test_latest/fake_B_1BA001.nii.gz'
+# Compare real & synthetic CT volumes
+# realCT = '../path_to_realCT'
+sCT = '.././path_to_sCT'
 
-slices = count_slices(nii)
+slices = count_slices(sCT)
 print(f"Number of sagittal slices: {slices['sagittal']}")
 print(f"Number of coronal slices: {slices['coronal']}")
 print(f"Number of axial slices: {slices['axial']}")

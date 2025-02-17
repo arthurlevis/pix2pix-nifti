@@ -1,3 +1,7 @@
+"""
+This file is borrowed from SynthRAD2023: https://github.com/SynthRAD2023
+"""
+
 import warnings
 import numpy as np
 from typing import Optional

@@ -1,3 +1,7 @@
+"""
+This file is adapted from pix2pix: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
+"""
+
 import torch
 from .base_model import BaseModel
 from . import networks
