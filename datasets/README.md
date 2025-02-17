@@ -3,6 +3,9 @@
 - Add Task1.zip file to root directory `pix2pix-nifti`
 
 - Activate conda envirnoment & run from this directory:
+
+Replace 'region' by brain or pelvis
+
 ```bash
 python main.py --zip-file ../Task1.zip --paired-dir ../<region>-paired --anatomy '<region>'
 ```
