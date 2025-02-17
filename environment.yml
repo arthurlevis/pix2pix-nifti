@@ -17,3 +17,6 @@ dependencies:
     - visdom
     - nibabel
     - simpleitk
+    - matplotlib
+    - evalutils
+    - scikit-image
