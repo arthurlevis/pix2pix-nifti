@@ -1,3 +1,5 @@
+This repository was adapted from pytorch-CycleGAN-and-pix2pix: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/tree/master
+
 ## Prerequisites
 - Linux
 - Python 3
