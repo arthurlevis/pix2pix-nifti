@@ -1,19 +1,19 @@
 #!/bin/bash
-#$ -N p2p-test-P-da
+#$ -N test-name
 #$ -l h_rt=12:00:00
 #$ -l gpu=1
-#$ -o /home/zcemjml/Scratch/pix2pix-nifti/logs/test
-#$ -e /home/zcemjml/Scratch/pix2pix-nifti/logs/test
+#$ -o /pth_to_/logs/test
+#$ -e /pth_to_/logs/test
 
-source /home/zcemjml/anaconda3/etc/profile.d/conda.sh
+source path_to_/profile.d/conda.sh
 conda activate pytorch-pix2pix-nifti 
 
-cd /home/zcemjml/Scratch/pix2pix-nifti 
+cd path_to_repo
 
 python test.py \
     --gpu_ids 0 \
-    --dataroot ./pelvis-paired \
-    --name pelvis-da \
+    --dataroot ./path_to_paired_dataset \
+    --name test-name \
     --model pix2pix \
     --input_nc 5 \
     --output_nc 5 \
