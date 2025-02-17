@@ -1,8 +1,8 @@
 ## Overview of Code Structure
 
-[train.py](../train.py) is a general-purpose training script. See the main [README](.../README.md) and [training/test  tips](tips.md) for more details.
+[train.py](../train.py) is a general-purpose training script. See the main [README](.../README.md) for more details.
 
-[test.py](../test.py) is a general-purpose test script. Once you have trained your model with `train.py`, you can use this script to test the model. It will load a saved model from `--checkpoints_dir` and save the results to `--results_dir`. See the main [README](.../README.md) and [training/test tips](tips.md) for more details.
+[test.py](../test.py) is a general-purpose test script. Once you have trained your model with `train.py`, you can use this script to test the model. It will load a saved model from `--checkpoints_dir` and save the results to `--results_dir`. See the main [README](.../README.md) for more details.
 
 [data](../data) directory contains the modules related to the loading and preprocessing of NIfTI files. 
 
